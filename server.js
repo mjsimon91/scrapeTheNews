@@ -38,7 +38,7 @@ app.get('/stories', function(req,res){
 
     // Grab each story on the New York Times home page
     $('.story').each(function(i, element){
-      
+
       var result = {};
 
       //Select the elements and assign to a variable
@@ -57,9 +57,41 @@ app.get('/stories', function(req,res){
   });
 });
 
+//Route to get all of the articles from the db
+app.get('/headlines', function(req,res){
+  // Find all headlines in the Headlines table
+  db.Headline.find({}).then(function(dbHeadline){
+    res.json(dbHeadline);
+  })
+  //If there is an error, return the error
+  .catch(function(error){
+    res.json(error);
+  });
+});
+
 //Create a route to get all of the notes from the db for each story
+app.get('/headlines/:id', function(req,res){
+  db.Headline.findOne({
+    _id: req.params.id
+  }).then(function(dbHeadline){
+    res.json(dbHeadline);
+  }).catch(function(error){
+    res.json(error);
+  });
+});
 
-
+//Create a route to post a note to the db
+app.post('/headlines/:id', function(req,res){
+  db.Note.create(req.body)
+  .then(function(dbNote){
+  // / If a Note was created successfully, find one Headline with an `_id` equal to `req.params.id`. Update the Headline to be associated with the new Note
+  return db.Headline.findOneAndUpdate({_id: req.params.id}, {note: db.Note._id}, {new: true});
+  }).then(function(dbHeadline){
+    res.json(dbHeadline);
+  }).catch(function(error){
+    res.json(errpr);
+  });
+});
 
 //Start listening on the server
 app.listen(PORT, function(){

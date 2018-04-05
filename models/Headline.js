@@ -14,6 +14,10 @@ var HeadlineSchema = new Schema({
   author:{
     type: String,
     required: false
+  },
+  note: {
+    type: Schema.Types.ObjectId,
+    ref: "Note"
   }
 });
 
