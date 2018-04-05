@@ -8,16 +8,12 @@ var Schema = mongoose.Schema;
 
 var HeadlineSchema = new Schema({
   title: {
-    type: string,
-    required: true,
+    type: String,
     unique: true
   },
-  date: {
-    type: Date
-  },
-  note: {
-    type: Schema.types.ObjectId,
-    ref: "Note"
+  author:{
+    type: String,
+    required: false
   }
 });
 
