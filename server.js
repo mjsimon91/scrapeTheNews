@@ -43,12 +43,15 @@ app.get('/stories', function(req,res){
 
       //Select the elements and assign to a variable
        result.title = $(element).find('.story-heading').text();
+       result.link = $(this).children('.story-heading a').attr('href')
        result.author = $(this).children('.byline').text();
+       result.text = $(this).children('.summary').text();
+       result.source = "New York Times"
 
+      ;
        // Create a new headline with what is in the result object
        db.Headline.create(result)
        .then(function(dbHeadline){
-         console.log(dbHeadline);
        }).catch(function(error){
          //If there was an error, return this to the client
          return res.json(error);
@@ -92,6 +95,8 @@ app.post('/headlines/:id', function(req,res){
     res.json(errpr);
   });
 });
+
+
 
 //Start listening on the server
 app.listen(PORT, function(){
