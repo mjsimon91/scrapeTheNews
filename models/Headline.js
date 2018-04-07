@@ -11,9 +11,16 @@ var HeadlineSchema = new Schema({
     type: String,
     unique: true
   },
+  link: {
+    type: String,
+    required: false
+  },
   author:{
     type: String,
     required: false
+  },
+  time: {
+    type: Date
   },
   note: {
     type: Schema.Types.ObjectId,
