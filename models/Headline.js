@@ -13,14 +13,18 @@ var HeadlineSchema = new Schema({
   },
   link: {
     type: String,
-    required: false
+    required: true
   },
   author:{
     type: String,
-    required: false
+    required: true
   },
   time: {
-    type: Date
+    type: Date,
+    required: true
+  },
+  image: {
+    type: String,
   },
   note: {
     type: Schema.Types.ObjectId,

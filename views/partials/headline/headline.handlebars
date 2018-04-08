@@ -1,0 +1,14 @@
+{{#each headlines}}
+    
+    <div class="card">
+        <img class="card-img-top" src="{{this.image}}" height="100%" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{this.author}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">{{this.time}}</h6>
+            <a href="{{this.link}}" class="btn btn-primary">Go to Article</a>
+            <a class="btn btn-primary commentButton" data-id="{{this._id}}">Comment</a>
+        </div>
+    </div>
+
+{{/each}}

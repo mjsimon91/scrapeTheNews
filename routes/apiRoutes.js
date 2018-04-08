@@ -26,16 +26,15 @@ module.exports = function(app){
                 result.link = $(element).find('.post-block__title__link').attr('href');
                 result.author = $(element).find('.river-byline__authors').text();
                 result.time = $(element).find('.river-byline__time').attr('datetime');
+                result.image = $(element).find('.post-block__media img').attr('src')
 
-                console.log(result);
+            
         
                 //Post the scraped data to the database
                 db.Headline.create(result, function(error, data){
                     if (error) {
                     console.log(error); 
-                    } else {
-                    console.log(data);
-                    }
+                    } 
                 });
 
             });
@@ -58,7 +57,9 @@ module.exports = function(app){
     app.get('/headlines/:id', function(req,res){
         db.Headline.findOne({
         _id: req.params.id
-        }).then(function(dbHeadline){
+        }).populate('note')
+        .then(function(dbHeadline){
+        console.log('params here ')
         res.json(dbHeadline);
         }).catch(function(error){
         res.json(error);
@@ -66,16 +67,22 @@ module.exports = function(app){
     });
     
     //Create a route to post a note to the db
-    app.post('/headlines/:id', function(req,res){
+    app.post("/headlines/:id", function(req, res) {
+        // Create a new note and pass the req.body to the entry
         db.Note.create(req.body)
-        .then(function(dbNote){
-        // / If a Note was created successfully, find one Headline with an `_id` equal to `req.params.id`. Update the Headline to be associated with the new Note
-        return db.Headline.findOneAndUpdate({_id: req.params.id}, {note: db.Note._id}, {new: true});
-        }).then(function(dbHeadline){
-        res.json(dbHeadline);
-        }).catch(function(error){
-        res.json(errpr);
-        });
-    });
+          .then(function(dbNote) {
+            // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+            // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+            // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+            return db.Headline.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+          })
+          .then(function(dbHeadline) {
+            // If we were able to successfully update an Article, send it back to the client
+            res.json(dbHeadline);
+          })
+          .catch(function(err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+          });
+      });
 }
-

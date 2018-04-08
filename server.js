@@ -2,6 +2,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var exphbs = require('express-handlebars');
+
 
 //Scraping dependencies
 var axios = require('axios');
@@ -16,17 +18,28 @@ var PORT = 3000;
 //Initialize express
 var app = express();
 
-//Useing body parser in order to handle for submissions
-app.use(bodyParser.urlencoded({extended:true}));
-// Use express.static to serve the public folder as a static directory
-app.use(express.static('public'));
-
 //Change Mongoose default from using callbacks for asynch queries to use promises instead
 mongoose.Promise = Promise;
 mongoose.connect("mongodb://localhost/scrapeTheNews");
 
+//Useing body parser in order to handle for submissions
+app.use(bodyParser.urlencoded({extended:true}));
+// Use express.static to serve the public folder as a static directory
+app.use(express.static(__dirname + '/public'));
+
+
+//The handlebars files are .handlebars
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}));
+
+
+app.set('view engine', 'handlebars');
+
+
 //Require the API Routes
 require('./routes/apiRoutes.js')(app)
+require('./routes/htmlRoutes.js')(app)
 
 //Start listening on the server
 app.listen(PORT, function(){

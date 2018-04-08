@@ -6,13 +6,13 @@ var Schema = mongoose.Schema;
 
 // Creating the note schema
 var NoteSchema = new Schema({
-  userName: {
+  username: {
     type: String,
-    required: true
+    required: false
   },
   note: {
     type: String,
-    required: true
+    required: false
   },
   date: {
     type: Date,
