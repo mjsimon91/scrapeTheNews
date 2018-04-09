@@ -17,14 +17,16 @@ $(document).ready(function(){
 
          // //Save the id of the selected headline in order to get all comments
         headlineId = $(this).attr("data-id")
+        console.log(headlineId);
 
         //AJAX call to get all the notes
-        $.ajax({
-            method: "GET",
-            url: '/headlines/' + headlineId
-        }).then(function(data){
-        })
-        console.log('headlineId ' + headlineId)
+        // $.ajax({
+        //     method: "GET",
+        //     url: '/headlines/' + headlineId
+        // }).then(function(data){
+        //     res.json(data)
+        // })
+        
         $('#noteInput').show();
 
         //Display all of the notes that are already associated with an article 
@@ -32,24 +34,22 @@ $(document).ready(function(){
             method: "GET",
             url: '/headlines/' + headlineId
         }).then(function(data){
-        
+            $('#allComments').empty()
+            console.log("hello")
+            data.note.forEach(element => {
+                $('#allComments').append('<div class="card">')
+                   $('#allComments').append('<div class="card-body">')    
+                       $('#allComments').append('<h5 class="card-title commentUsername" id="commentUsername">' + element.username + '</h5>')        
+                       $('#allComments').append('<h6 class="card-subtitle mb-2 text-muted" id="cardDate">' + element.date+'</h6>')        
+                       $('#allComments').append('<p class="card-text" id="userComment">' + element.comment + '</p>')           
+                   $('#allComments').append('</div>')    
+                $('#allComments').append('</div>') 
+           
+           // Clear the fields whena comment is left
+           $('#username').val("");
+           $('#comment').val("")
             
-            $('#allComments').append('<div class="card">')
-                $('#allComments').append('<div class="card-body">')    
-                    $('#allComments').append('<h5 class="card-title commentUsername" id="commentUsername"></h5>')        
-                    $('#allComments').append('<h6 class="card-subtitle mb-2 text-muted" id="cardDate"></h6>')        
-                    $('#allComments').append('<p class="card-text" id="userComment"></p>')           
-                $('#allComments').append('</div>')    
-            $('#allComments').append('</div>')  
-        
-            
-            //If there is a note, then append the notes
-            if (data.note) {
-                console.log(data)
-                $('#commentUsername').append(data.note.username);
-                $('#cardDate').append(data.note.date);
-                $('#userComment').append(data.note.comment);
-            }
+           });
         })
 
     });
@@ -58,7 +58,7 @@ $(document).ready(function(){
 
     // When a user submits a comment, post to the db
     $('.submitComment').on('click', function(event){
-        console.log('headlineId ' + headlineId)
+
         // Get the values of the input
         var username = $('#username').val().trim()
         var comment = $('#comment').val().trim();
@@ -74,31 +74,31 @@ $(document).ready(function(){
             url: '/headlines/' + headlineId,
             data: note
         }).then(function(data){
+            console.log(data.note);
 
-
-             
-            $('#allComments').append('<div class="card">')
-                $('#allComments').append('<div class="card-body">')    
-                    $('#allComments').append('<h5 class="card-title commentUsername" id="commentUsername"></h5>')        
-                    $('#allComments').append('<h6 class="card-subtitle mb-2 text-muted" id="cardDate"></h6>')        
-                    $('#allComments').append('<p class="card-text" id="userComment"></p>')           
-                $('#allComments').append('</div>')    
-            $('#allComments').append('</div>') 
+            data.note.forEach(element => {
+                 $('#allComments').append('<div class="card">')
+                    $('#allComments').append('<div class="card-body">')    
+                        $('#allComments').append('<h5 class="card-title commentUsername" id="commentUsername">' + element.username + '</h5>')        
+                        $('#allComments').append('<h6 class="card-subtitle mb-2 text-muted" id="cardDate">' + element.date+'</h6>')        
+                        $('#allComments').append('<p class="card-text" id="userComment">' + element.comment + '</p>')           
+                    $('#allComments').append('</div>')    
+                 $('#allComments').append('</div>') 
             
-                
+            // Clear the fields whena comment is left
+            $('#username').val("");
+            $('#comment').val("")
+             
+            });
+             
+           
 
 
         }).catch(function(error){
             console.log(error);
         })
 
-        // Clear the fields whena comment is left
-        $('#username').val("");
-        $('#comment').val("")
-
-        $('#commentUsername').append(data.note.username);
-        $('#cardDate').append(data.note.date);
-        $('#userComment').append(data.note.comment);
+       
     })
 
 })

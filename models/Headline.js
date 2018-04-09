@@ -26,10 +26,12 @@ var HeadlineSchema = new Schema({
   image: {
     type: String,
   },
-  note: {
+  note: [
+    {
     type: Schema.Types.ObjectId,
     ref: "Note"
   }
+]
 });
 
 //Create a model using Mongoose
