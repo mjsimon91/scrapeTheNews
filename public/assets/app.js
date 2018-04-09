@@ -74,7 +74,20 @@ $(document).ready(function(){
             url: '/headlines/' + headlineId,
             data: note
         }).then(function(data){
-            console.log(data);
+
+
+             
+            $('#allComments').append('<div class="card">')
+                $('#allComments').append('<div class="card-body">')    
+                    $('#allComments').append('<h5 class="card-title commentUsername" id="commentUsername"></h5>')        
+                    $('#allComments').append('<h6 class="card-subtitle mb-2 text-muted" id="cardDate"></h6>')        
+                    $('#allComments').append('<p class="card-text" id="userComment"></p>')           
+                $('#allComments').append('</div>')    
+            $('#allComments').append('</div>') 
+            
+                
+
+
         }).catch(function(error){
             console.log(error);
         })
@@ -82,6 +95,10 @@ $(document).ready(function(){
         // Clear the fields whena comment is left
         $('#username').val("");
         $('#comment').val("")
+
+        $('#commentUsername').append(data.note.username);
+        $('#cardDate').append(data.note.date);
+        $('#userComment').append(data.note.comment);
     })
 
 })
