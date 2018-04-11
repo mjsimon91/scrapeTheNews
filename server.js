@@ -21,9 +21,7 @@ var app = express();
 //Change Mongoose default from using callbacks for asynch queries to use promises instead
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrapeTheNews";
 mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI, {
-  useMongoClient: true
-});
+mongoose.connect(MONGODB_URI);
 
 //Useing body parser in order to handle for submissions
 app.use(bodyParser.urlencoded({extended:true}));
